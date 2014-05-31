@@ -1,0 +1,9 @@
+*.DS_Store
+icml2015/*.aux
+icml2015/*.blg
+icml2015/*.log
+icml2015/*.out
+icml2015/*.synctex.gz
+icml2015/*.fdb_latexmk
+icml2015/parallel_monsubmax.pdf
+
