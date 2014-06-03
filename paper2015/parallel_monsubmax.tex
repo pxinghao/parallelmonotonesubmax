@@ -18,7 +18,7 @@
 \usepackage{natbib}
 
 % For algorithms
-\usepackage{algorithm}
+\usepackage[subsection]{algorithm}
 \usepackage{algorithmic}
 
 % As of 2011, we use the hyperref package to produce hyperlinks in the
@@ -40,502 +40,415 @@
 % note in the first column to ``Proceedings of the...''
 %\usepackage[accepted]{icml2014}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newtheorem{dfn}{Definition}[section]
+\newtheorem{thm}{Theorem}[section]
+\newtheorem{cor}[thm]{Corollary}
+\newtheorem{lem}[thm]{Lemma}
+\newtheorem{prop}[thm]{Proposition}
+\newtheorem{exmp}[thm]{Example}
+\newtheorem{claim}{Claim}
+
+% Commenting system
+\newcommand{\Comments}{1}
+\newcommand{\note}[2]{\ifnum\Comments=1\textcolor{#1}{#2}\fi}
+\newcommand{\xinghao}[1]{\note{red}{[XP: #1]}}
+\newcommand{\joey}[1]{\note{blue}{[JG: #1]}}
+\newcommand{\stef}[1]{\note{green}{[SJ: #1]}}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%% ---------------------------------------------------------
+%% Terminology
+\newcommand{\term}[1]{\textbf{#1}}
+
+
+%% ---------------------------------------------------------
+%% Citation/Reference commands
+\newcommand{\citecf}[1]{(\cf, \cite{#1})}
+\newcommand{\tableref}[1]{Table~\ref{#1}}
+\newcommand{\figref}[1]{Fig.~\ref{#1}}
+\newcommand{\listref}[1]{Listing~\ref{#1}}
+
+\newcommand{\eqnref}[1]{Eq.~(\ref{#1})}
+\newcommand{\secref}[1]{Sec.~\ref{#1}}
+\newcommand{\chapref}[1]{Chapter~\ref{#1}}
+
+\newcommand{\dfnref}[1]{Definition~\ref{#1}}
+\newcommand{\thmref}[1]{Thm.~\ref{#1}}
+\newcommand{\propref}[1]{Prop.~\ref{#1}}
+\newcommand{\lemref}[1]{Lem~\ref{#1}}
+\newcommand{\exmpref}[1]{Example~\ref{#1}}
+\newcommand{\corref}[1]{Cor.~\ref{#1}}
+\newcommand{\algref}[1]{Alg.~\ref{#1}}
+\newcommand{\procref}[1]{Proc.~\ref{#1}}
+\newcommand{\alglineref}[1]{Line~\ref{#1}}
+\newcommand{\probref}[1]{Problem~(\ref{#1})}
+\newcommand{\appendref}[1]{Appendix~\ref{#1}}
+
+%% ---------------------------------------------------------
+%% Basic Math
+\newcommand{\abs}[1]{\left|#1\right|}
+\newcommand{\ceil}[1]{\left\lceil #1 \right\rceil}
+\newcommand{\floor}[1]{\left\lfloor #1 \right\rfloor}
+
+
+%% ---------------------------------------------------------
+%% special math functions
+\newcommand{\polylog}[2]{\,\mathbf{Li}_{#1}\left( #2 \right)}
+\newcommand{\harmonic}[2]{\,\mathbf{h}_{#1}\left( #2 \right)}
+
+%% ---------------------------------------------------------
+%% Norms
+\newcommand{\Lone}{L_{1}}
+\newcommand{\Linf}{L_{\infty}}
+\newcommand{\LInfNorm}[1]{\left|\left| #1 \right|\right|_{\infty}}
+\newcommand{\LOneNorm}[1]{\left|\left| #1 \right|\right|_1}
+
+\newcommand{\hinge}[1]{\left[  #1 \right]_+}
+
+%% ---------------------------------------------------------
+%% Probability notation
+\newcommand{\given}{\,|\,}
+\newcommand{\stdist}[1]{\mathbf{\pi} \left( #1 \right) }
+\newcommand{\Prb}[1]{\mathbf{P} \left( #1 \right) }
+\newcommand{\PrbEst}[1]{\mathbf{\tilde{P}} \left( #1 \right) }
+\newcommand{\Ent}[1]{\mathbf{H} \left( #1 \right) }
+\newcommand{\PiPrb}[1]{\Prb{ #1 } }
+\newcommand{\Kern}[1]{K \left( #1 \right) }
+\newcommand{\Ex}[1]{\mathbf{E} \left[ #1 \right] }
+\newcommand{\Exwrt}[2]{\mathbf{E}_{#1} \left[ #2 \right] }
+\newcommand{\Variance}[1]{\mathbf{Var} \left[ #1 \right] }
+\newcommand{\Ind}[1]{\mathbf{1}\left[ #1 \right]}
+\newcommand{\Bern}[1]{\text{Bern}( #1 ) }
+
+%% ---------------------------------------------------------
+%% Set notation
+\newcommand{\reals}{\mathbb{R}}
+\newcommand{\integers}{\mathbb{Z}}
+\newcommand{\set}[1]{\left\{#1\right\}}
+\newcommand{\vecspace}{\mathcal{V}}
+\newcommand{\Union}{\bigcup}
+\newcommand{\Inter}{\bigcap}
+\newcommand{\union}{\cup}
+\newcommand{\inter}{\cap}
+\newcommand{\size}[1]{\left| #1 \right|}
+
+
+%% ---------------------------------------------------------
+%% Complexity
+\newcommand{\BigO}[1]{O\hspace{-1pt}\left( #1 \right)}
+\newcommand{\BigTheta}[1]{\Theta \left( #1 \right)}
+\newcommand{\BigOmega}[1]{\Omega \left( #1 \right)}
+
+
+
+
+
+% %% ---------------------------------------------------------
+% %% Algorithms
+% \SetKwFor{ParForAll}{for}{do in parallel}{end}
+% \SetKwFunction{Map}{Map}
+% \SetKwFunction{Reduce}{Reduce}
+
+% \SetKwInput{Input}{Input}
+% \SetKwInput{Output}{Output}
+% \SetKwInput{SideEffect}{SideEffect}
+% \SetKwInput{Define}{Define}
+% \SetKwInput{Global}{Global}
+% \SetKwFor{DoWithProbability}{with probability}{}{}
+% \SetKwFunction{DPMeansOp}{DPMeansOp}
+% \SetKwFunction{DPValidate}{DPValidate}
+% \SetKwFunction{OFLValidate}{OFLValidate}
+% \SetKwFunction{BPMeansOp}{BPMeansOp}
+% \SetKwFunction{BPValidate}{BPValidate}
+% \SetKwFunction{NewClusters}{AcceptedClusters}
+
+% \SetKw{WaitUntil}{wait until}
+
+% \SetKwFunction{Mean}{Mean}
+% \SetKwFunction{Ref}{Ref}
+
+
+%% ---------------------------------------------------------
+%% Paper specific notation
+
+\newcommand{\seqlz}{Seq-lg}
+\newcommand{\mrlz}{MR-lg}
+\newcommand{\scclz}{SCC-lg}
+\newcommand{\cclz}{CC-lg}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
 
 % The \icmltitle you define below is probably too long as a header.
 % Therefore, a short form for the running title is supplied here:
-\icmltitlerunning{Submission and Formatting Instructions for ICML 2014}
+\icmltitlerunning{Parallel Lazy Greedy Monotone Submodular Maximization}
 
 \begin{document} 
 
 \twocolumn[
-\icmltitle{Submission and Formatting Instructions for the Thirty-first \\ 
-           International Conference on Machine Learning (ICML 2014)}
+\icmltitle{Parallel Lazy Greedy Monotone Submodular Maximization}
 
 % It is OKAY to include author information, even for blind
 % submissions: the style file will automatically remove it for you
 % unless you've provided the [accepted] option to the icml2014
 % package.
-\icmlauthor{Your Name}{email@yourdomain.edu}
-\icmladdress{Your Fantastic Institute,
-            314159 Pi St., Palo Alto, CA 94306 USA}
-\icmlauthor{Your CoAuthor's Name}{email@coauthordomain.edu}
-\icmladdress{Their Fantastic Institute,
-            27182 Exp St., Toronto, ON M6H 2T1 CANADA}
+\icmlauthor{Xinghao Pan}{xinghao@eecs.berkeley.edu}
+\icmlauthor{Stefanie Jegelka}{stefje@eecs.berkeley.edu}
+\icmlauthor{Joseph Gonzalez}{jegonzal@eecs.berkeley.edu}
+\icmlauthor{Michael I. Jordan}{jordan@eecs.berkeley.edu}
+\icmladdress{UC Berkeley}
 
 % You may provide any keywords that you 
 % find helpful for describing your paper; these are used to populate 
 % the "keywords" metadata in the PDF but will not be shown in the document
-\icmlkeywords{boring formatting information, machine learning, ICML}
+\icmlkeywords{submodular maximization, big data, parallel, greedy algorithm}
 
 \vskip 0.3in
 ]
 
 \begin{abstract} 
-There are two review cycles for ICML 2014, with full paper submissions 
-due on October 4, 2013 and January 31, 2014. Reviewing 
-will be blind to the identities of the authors, and therefore identifying
-information must not appear in any way in papers submitted for review. 
-Submissions must be in PDF, with an 8 page length limit ( 9 pages are allowed if the 9-th page contains \emph{only} references).
+We parallelize the lazy greedy algorithm for monotone submodular maximization, using concurrency control.
+This allows us to achieve parallel speed ups while retaining a $1-1/e$ approximation.
 \end{abstract} 
 
-\section{Electronic Submission}
-\label{submission}
+\section{Introduction}
+\label{sec:intro}
+Submodular problems are important.
+Lazy greedy provides a $1-1/e$ approximation.
 
-As in the past few years, ICML will rely exclusively on
-electronic formats for submission and review. 
+However, lazy greedy does not scale to large scale problems.
+To tackle big datasets, we need to leverage advances in parallel hardware.
+The inherently serial nature of lazy greedy poses a challenge to doing so.
 
+In this paper, we use apply concurrency control to parallelize lazy greedy, and propose a scalable algorithm that achieves the same $1-1/e$ approximation.
 
-\subsection{Templates for Papers}
+\section{Related work}
+\label{sec:relatedwork}
+\cite{badan14} proposed one-shot MapReduce greedy, which provides a weaker approximation guarantee.
 
-Electronic templates for producing papers for submission are available
-for \LaTeX\/ . Templates are accessible on the World
-Wide Web at:\\
-\textbf{\texttt{http://icml.cc/2014/}}
+\section{Submodularity}
+\label{sec:submodular}
 
-\noindent
-Send questions about these electronic templates to
-\texttt{program@icml.cc}.
-
-The formatting instructions below will be enforced for initial submissions and camera-ready copies. 
-\begin{itemize}
-\item The maximum paper length is 8 pages excluding references, and 
-9 pages including references.
-\item Do not alter the style template; in particular, do not compress the paper format 
-by reducing the vertical spaces.
-\item Do not include author information or acknowledgments in your
-  initial submission. 
-\item Place figure captions {\em under} the figure (and omit titles from
-  inside the graphic file itself).  Place table captions {\em over}
-  the table.
-\item References must include page numbers whenever possible and be as
-  complete as possible.  Place multiple citations in chronological order.  
-\end{itemize}
-Please see below for details on each of these items.
-
-\subsection{Submitting Papers}
-
-Submission to ICML 2014 will be entirely electronic, via a web site
-(not email).  The URL and information about the submission process
-are available on the conference web site at
-
-\textbf{\texttt{http://icml.cc/2014/}}
-
-{\bf Paper Deadline:} The deadline for paper submission to ICML 2014
-is at 23:59 Universal Time (3:59 Pacific Daylight Time) on the due dates
-(October 4, or January 31, depending on the review cycle).  
-If your full submission does not reach us by this time, it will 
-not be considered for publication. There is no separate abstract submission.
-
-{\bf Anonymous Submission:} To facilitate blind review, no identifying
-author information should appear on the title page or in the paper
-itself.  Section~\ref{author info} will explain the details of how to
-format this.
-
-{\bf Simultaneous Submission:} ICML will not accept any paper which,
-at the time of submission, is under review for another conference or
-has already been published. This policy also applies to papers that
-overlap substantially in technical content with conference papers
-under review or previously published. ICML submissions must not be
-submitted to other conferences during ICML's review period. Authors
-may submit to ICML substantially different versions of journal papers
-that are currently under review by the journal, but not yet accepted
-at the time of submission. Informal publications, such as technical
-reports or papers in workshop proceedings which do not appear in
-print, do not fall under these restrictions.
-
-\medskip
-
-To ensure our ability to print submissions, authors must provide their
-manuscripts in \textbf{PDF} format.  Furthermore, please make sure
-that files contain only Type-1 fonts (e.g.,~using the program {\tt
-  pdffonts} in linux or using File/DocumentProperties/Fonts in
-Acrobat).  Other fonts (like Type-3) might come from graphics files
-imported into the document.
-
-Authors using \textbf{Word} must convert their document to PDF.  Most
-of the latest versions of Word have the facility to do this
-automatically.  Submissions will not be accepted in Word format or any
-format other than PDF. Really. We're not joking. Don't send Word.
-
-Those who use \textbf{\LaTeX} to format their accepted papers need to
-pay close attention to the typefaces used.  Specifically, when
-producing the PDF by first converting the dvi output of \LaTeX\ to Postscript
-the default behavior is to use non-scalable Type-3 PostScript bitmap
-fonts to represent the standard \LaTeX\ fonts. The resulting document
-is difficult to read in electronic form; the type appears fuzzy. To
-avoid this problem, dvips must be instructed to use an alternative
-font map.  This can be achieved with
-something like the following commands:\\[0.5em]
-{\bf dvips -Ppdf -tletter -G0 -o paper.ps paper.dvi}\\
-{\bf ps2pdf paper.ps}\\[0.5em]
-Note that it is a zero following the ``-G''.  This tells dvips to use
-the config.pdf file (and this file refers to a better font mapping).
-
-Another alternative is to use the \textbf{pdflatex} program instead of
-straight \LaTeX. This program avoids the Type-3 font problem, however
-you must ensure that all of the fonts are embedded (use {\tt
-pdffonts}). If they are not, you need to configure pdflatex to use a
-font map file that specifies that the fonts be embedded. Also you
-should ensure that images are not downsampled or otherwise compressed
-in a lossy way.
-
-Note that the 2014 style files use the {\tt hyperref} package to
-make clickable links in documents.  If this causes problems for you,
-add {\tt nohyperref} as one of the options to the {\tt icml2014}
-usepackage statement.
-
-\subsection{Reacting to Reviews}
-We will continue the ICML tradition in which the authors are given the
-option of providing a short reaction to the initial reviews. These
-reactions will be taken into account in the discussion among the
-reviewers and area chairs.
-
-\subsection{Submitting Final Camera-Ready Copy}
-
-The final versions of papers accepted for publication should follow the
-same format and naming convention as initial submissions, except of
-course that the normal author information (names and affiliations)
-should be given.  See Section~\ref{final author} for details of how to
-format this.
-
-The footnote, ``Preliminary work.  Under review by the International
-Conference on Machine Learning (ICML).  Do not distribute.'' must be
-modified to ``\textit{Proceedings of the
-$\mathit{31}^{st}$ International Conference on Machine Learning},
-Beijing, China, 2014.  JMLR: W\&CP volume 32. 
-Copyright 2014 by the author(s).''
-
-For those using the \textbf{\LaTeX} style file, simply change
-$\mathtt{\backslash usepackage\{icml2014\}}$ to 
-
-\verb|\usepackage[accepted]{icml2014}|
-
-\noindent
-Authors using \textbf{Word} must edit the
-footnote on the first page of the document themselves.
-
-Camera-ready copies should have the title of the paper as running head
-on each page except the first one.  The running title consists of a
-single line centered above a horizontal rule which is $1$ point thick.
-The running head should be centered, bold and in $9$ point type.  The
-rule should be $10$ points above the main text.  For those using the
-\textbf{\LaTeX} style file, the original title is automatically set as running
-head using the {\tt fancyhdr} package which is included in the ICML
-2014 style file package.  In case that the original title exceeds the
-size restrictions, a shorter form can be supplied by using
-
-\verb|\icmltitlerunning{...}|
-
-just before $\mathtt{\backslash begin\{document\}}$.
-Authors using \textbf{Word} must edit the header of the document themselves.
-
-\section{Format of the Paper} 
- 
-All submissions must follow the same format to ensure the printer can
-reproduce them without problems and to let readers more easily find
-the information that they desire.
-
-\subsection{Length and Dimensions}
-
-Papers must not exceed eight (8) pages, including all figures, tables,
-and appendices, but excluding references. When references are included,
-the paper must not exceed nine (9) pages. Any submission that exceeds 
-this page limit or that diverges significantly from the format specified 
-herein will be rejected without review.
-
-The text of the paper should be formatted in two columns, with an
-overall width of 6.75 inches, height of 9.0 inches, and 0.25 inches
-between the columns. The left margin should be 0.75 inches and the top
-margin 1.0 inch (2.54~cm). The right and bottom margins will depend on
-whether you print on US letter or A4 paper, but all final versions
-must be produced for US letter size.
-
-The paper body should be set in 10~point type with a vertical spacing
-of 11~points. Please use Times  typeface throughout the text.
-%Please use the default typeface (Computer Modern) throughout the text.
-
-\subsection{Title}
-
-The paper title should be set in 14~point bold type and centered
-between two horizontal rules that are 1~point thick, with 1.0~inch
-between the top rule and the top edge of the page. Capitalize the
-first letter of content words and put the rest of the title in lower
-case.
-
-\subsection{Author Information for Submission}
-\label{author info}
-
-To facilitate blind review, author information must not appear.  If
-you are using \LaTeX\/ and the \texttt{icml2014.sty} file, you may use
-\verb+\icmlauthor{...}+ to specify authors.  The author information
-will simply not be printed until {\tt accepted} is an argument to the
-style file. Submissions that include the author information will not
-be reviewed.
-
-\subsubsection{Self-Citations}
-
-If your are citing published papers for which you are an author, refer
-to yourself in the third person. In particular, do not use phrases
-that reveal your identity (e.g., ``in previous work \cite{langley00}, we 
-have shown \ldots'').
-
-Do not anonymize citations in the reference section by removing or
-blacking out author names. The only exception are manuscripts that are
-not yet published (e.g. under submission). If you choose to refer to
-such unpublished manuscripts \cite{anonymous}, anonymized copies have 
-to be submitted
-as Supplementary Material via CMT. However, keep in mind that an ICML
-paper should be self contained and should contain sufficient detail
-for the reviewers to evaluate the work. In particular, reviewers are
-not required to look a the Supplementary Material when writing their
-review.
-
-\subsubsection{Camera-Ready Author Information}
-\label{final author}
-
-If a paper is accepted, a final camera-ready copy must be prepared.
-%
-For camera-ready papers, author information should start 0.3~inches
-below the bottom rule surrounding the title. The authors' names should
-appear in 10~point bold type, electronic mail addresses in 10~point
-small capitals, and physical addresses in ordinary 10~point type.
-Each author's name should be flush left, whereas the email address
-should be flush right on the same line. The author's physical address
-should appear flush left on the ensuing line, on a single line if
-possible. If successive authors have the same affiliation, then give
-their physical address only once.
-
-A sample file (in PDF) with author names is included in the ICML2014 
-style file package.
-
-\subsection{Abstract}
-
-The paper abstract should begin in the left column, 0.4~inches below
-the final address. The heading `Abstract' should be centered, bold,
-and in 11~point type. The abstract body should use 10~point type, with
-a vertical spacing of 11~points, and should be indented 0.25~inches
-more than normal on left-hand and right-hand margins. Insert
-0.4~inches of blank space after the body. Keep your abstract brief and 
-self-contained,
-limiting it to one paragraph and no more than six or seven sentences.
-
-\subsection{Partitioning the Text} 
-
-You should organize your paper into sections and paragraphs to help
-readers place a structure on the material and understand its
-contributions.
-
-\subsubsection{Sections and Subsections}
-
-Section headings should be numbered, flush left, and set in 11~pt bold
-type with the content words capitalized. Leave 0.25~inches of space
-before the heading and 0.15~inches after the heading.
-
-Similarly, subsection headings should be numbered, flush left, and set
-in 10~pt bold type with the content words capitalized. Leave
-0.2~inches of space before the heading and 0.13~inches afterward.
-
-Finally, subsubsection headings should be numbered, flush left, and
-set in 10~pt small caps with the content words capitalized. Leave
-0.18~inches of space before the heading and 0.1~inches after the
-heading. 
-
-Please use no more than three levels of headings.
-
-\subsubsection{Paragraphs and Footnotes}
-
-Within each section or subsection, you should further partition the
-paper into paragraphs. Do not indent the first line of a given
-paragraph, but insert a blank line between succeeding ones.
- 
-You can use footnotes\footnote{For the sake of readability, footnotes
-should be complete sentences.} to provide readers with additional
-information about a topic without interrupting the flow of the paper. 
-Indicate footnotes with a number in the text where the point is most
-relevant. Place the footnote in 9~point type at the bottom of the
-column in which it appears. Precede the first footnote in a column
-with a horizontal rule of 0.8~inches.\footnote{Multiple footnotes can
-appear in each column, in the same order as they appear in the text,
-but spread them across columns and pages if possible.}
-
-% \begin{figure}[ht]
-% \vskip 0.2in
-% \begin{center}
-% \centerline{\includegraphics[width=\columnwidth]{icml_numpapers}}
-% \caption{Historical locations and number of accepted papers for International
-%   Machine Learning Conferences (ICML 1993 -- ICML 2008) and
-%   International Workshops on Machine Learning (ML 1988 -- ML
-%   1992). At the time this figure was produced, the number of
-%   accepted papers for ICML 2008 was unknown and instead estimated.}
-% \label{icml-historical}
-% \end{center}
-% \vskip -0.2in
-% \end{figure} 
-
-\subsection{Figures}
- 
-You may want to include figures in the paper to help readers visualize
-your approach and your results. Such artwork should be centered,
-legible, and separated from the text. Lines should be dark and at
-least 0.5~points thick for purposes of reproduction, and text should
-not appear on a gray background.
-
-Label all distinct components of each figure. If the figure takes the
-form of a graph, then give a name for each axis and include a legend
-that briefly describes each curve. Do not include a title inside the
-figure; instead, the caption should serve this function.
-
-Number figures sequentially, placing the figure number and caption
-{\it after\/} the graphics, with at least 0.1~inches of space before
-the caption and 0.1~inches after it, as in
-Figure~\ref{icml-historical}.  The figure caption should be set in
-9~point type and centered unless it runs two or more lines, in which
-case it should be flush left.  You may float figures to the top or
-bottom of a column, and you may set wide figures across both columns
-(use the environment {\tt figure*} in \LaTeX), but always place
-two-column figures at the top or bottom of the page.
-
-\subsection{Algorithms}
-
-If you are using \LaTeX, please use the ``algorithm'' and ``algorithmic'' 
-environments to format pseudocode. These require 
-the corresponding stylefiles, algorithm.sty and 
-algorithmic.sty, which are supplied with this package. 
-Algorithm~\ref{alg:example} shows an example. 
-
+\subsection{Lazy greedy algorithm}
 \begin{algorithm}[tb]
-   \caption{Bubble Sort}
-   \label{alg:example}
-\begin{algorithmic}
-   \STATE {\bfseries Input:} data $x_i$, size $m$
-   \REPEAT
-   \STATE Initialize $noChange = true$.
-   \FOR{$i=1$ {\bfseries to} $m-1$}
-   \IF{$x_i > x_{i+1}$} 
-   \STATE Swap $x_i$ and $x_{i+1}$
-   \STATE $noChange = false$
-   \ENDIF
-   \ENDFOR
-   \UNTIL{$noChange$ is $true$}
+  \caption{Serial Lazy Greedy}
+  \label{alg:seqlz}
+\begin{algorithmic}[1]
+  \STATE {\bfseries Input:} data $V$, cardinality constraint $k$
+  \STATE Initialize $\forall e \in V$, $\rho_e = \infty$.
+  \STATE Initialize $S^0 = \emptyset$
+  \STATE Push all $(e, \rho_e)$ onto $PQ$.
+  \FOR{$i = 0, \dots, k-1$}
+    \WHILE{best element not found}
+      \STATE $(e, \rho_e) = PQ.head()$
+      \STATE $\rho_e \leftarrow F(S^i\cup e) - F(S^i)$
+      \STATE $PQ.update((e,\rho_e))$
+      \STATE $(e', \rho_{e'}) = PQ.head()$
+      \IF{$e == e'$}
+        \STATE $PQ.pop()$
+        \STATE $S^{i+1} = S^i \cup e$
+      \ENDIF
+    \ENDWHILE
+  \ENDFOR
 \end{algorithmic}
 \end{algorithm}
- 
-\subsection{Tables} 
- 
-You may also want to include tables that summarize material. Like 
-figures, these should be centered, legible, and numbered consecutively. 
-However, place the title {\it above\/} the table with at least 
-0.1~inches of space before the title and the same after it, as in 
-Table~\ref{sample-table}. The table title should be set in 9~point 
-type and centered unless it runs two or more lines, in which case it
-should be flush left.
 
-% Note use of \abovespace and \belowspace to get reasonable spacing 
-% above and below tabular lines. 
 
-\begin{table}[t]
-\caption{Classification accuracies for naive Bayes and flexible 
-Bayes on various data sets.}
-\label{sample-table}
-\vskip 0.15in
-\begin{center}
-\begin{small}
-\begin{sc}
-\begin{tabular}{lcccr}
-\hline
-\abovespace\belowspace
-Data set & Naive & Flexible & Better? \\
-\hline
-\abovespace
-Breast    & 95.9$\pm$ 0.2& 96.7$\pm$ 0.2& $\surd$ \\
-Cleveland & 83.3$\pm$ 0.6& 80.0$\pm$ 0.6& $\times$\\
-Glass2    & 61.9$\pm$ 1.4& 83.8$\pm$ 0.7& $\surd$ \\
-Credit    & 74.8$\pm$ 0.5& 78.3$\pm$ 0.6&         \\
-Horse     & 73.3$\pm$ 0.9& 69.7$\pm$ 1.0& $\times$\\
-Meta      & 67.1$\pm$ 0.6& 76.5$\pm$ 0.5& $\surd$ \\
-Pima      & 75.1$\pm$ 0.6& 73.9$\pm$ 0.5&         \\
-\belowspace
-Vehicle   & 44.9$\pm$ 0.6& 61.5$\pm$ 0.4& $\surd$ \\
-\hline
-\end{tabular}
-\end{sc}
-\end{small}
-\end{center}
-\vskip -0.1in
-\end{table}
+\section{Concurrency Control}
+\label{sec:concurrencycontrol}
 
-Tables contain textual material that can be typeset, as contrasted 
-with figures, which contain graphical material that must be drawn. 
-Specify the contents of each row and column in the table's topmost
-row. Again, you may float tables to a column's top or bottom, and set
-wide tables across both columns, but place two-column tables at the
-top or bottom of the page.
- 
-\subsection{Citations and References} 
+\section{Parallel lazy greedy}
+\label{sec:parlazy}
 
-Please use APA reference format regardless of your formatter
-or word processor. If you rely on the \LaTeX\/ bibliographic 
-facility, use {\tt natbib.sty} and {\tt icml2014.bst} 
-included in the style-file package to obtain this format.
+\subsection{MapReduce algorithm}
+\xinghao{Descriptions were written late at night, so apologies for the rambling and poor description.}
+The MapReduce lazy greedy algorithm, \mrlz{}, is the most straightforward parallelization of \seqlz{}.
+The high-level idea is that we can tighten the upper bounds $\rho_e$ on marginal gains without compromising correctness.
+\mrlz{} computes more $\rho_e$'s than \seqlz{}, but distributes this expensive work over multiple processors.
+\begin{algorithm}[tb]
+  \caption{MapReduce Lazy Greedy}
+  \label{alg:mrlz}
+\begin{algorithmic}[1]
+  \STATE {\bfseries Input:} data $V$, cardinality constraint $k$
+  \STATE Initialize $\forall e \in V$, $\rho_e = \infty$.
+  \STATE Initialize $S^0 = \emptyset$
+  \STATE Push all $(e, \rho_e, 0)$ onto $PQ$.
+  \FOR{$i = 0, \dots, k-1$}
+    \WHILE{best element not found}
+      \STATE $T = \emptyset$
+      \FOR{$p = 1, \dots, P$}
+        \STATE $(e, \rho_e, i_e) = PQ.pop()$
+        \STATE $T \leftarrow T \cup e$
+      \ENDFOR
+      \STATE $\forall e \in T$, in parallel, $\rho_e \leftarrow F(S^i\cup e) - F(S^i)$
+      \STATE $\forall e \in T$, serially, $PQ.push((e, \rho_e, i))$
+      \STATE $(e, \rho_e, i_e) = PQ.head()$
+      \IF{$i_e = i$}
+        \STATE $PQ.pop()$
+        \STATE $S^{i+1} = S^i \cup e$
+      \ENDIF
+    \ENDWHILE
+  \ENDFOR
+\end{algorithmic}
+\end{algorithm}
 
-Citations within the text should include the authors' last names and
-year. If the authors' names are included in the sentence, place only
-the year in parentheses, for example when referencing Arthur Samuel's
-pioneering work \yrcite{Samuel59}. Otherwise place the entire
-reference in parentheses with the authors and year separated by a
-comma \cite{Samuel59}. List multiple references separated by
-semicolons \cite{kearns89,Samuel59,mitchell80}. Use the `et~al.'
-construct only for citations with three or more authors or after
-listing all authors to a publication in an earlier reference \cite{MachineLearningI}.
 
-Authors should cite their own work in the third person
-in the initial version of their paper submitted for blind review.
-Please refer to Section~\ref{author info} for detailed instructions on how to
-cite your own papers.
 
-Use an unnumbered first-level section heading for the references, and 
-use a hanging indent style, with the first line of the reference flush
-against the left margin and subsequent lines indented by 10 points. 
-The references at the end of this document give examples for journal
-articles \cite{Samuel59}, conference publications \cite{langley00}, book chapters \cite{Newell81}, books \cite{DudaHart2nd}, edited volumes \cite{MachineLearningI}, 
-technical reports \cite{mitchell80}, and dissertations \cite{kearns89}. 
+\subsection{Simple concurrency control algorithm}
+\mrlz{} imposes expensive coordination barriers.
+\scclz{} attempts to address this problem by asynchronous concurrency control.
+In addition, \scclz{} tries to conserve computation for submodular functions with sparse dependencies.
+In such cases, the marginal gains for some elements may not be affected by the inclusion of new elements into $S$.
+\scclz{} identifies opportunities for re-using the computations of $\rho_e$'s.
+\begin{algorithm}[tb]
+  \caption{Simple CC Lazy Greedy}
+  \label{alg:scclz}
+\begin{algorithmic}[1]
+  \STATE {\bfseries Input:} data $V$, cardinality constraint $k$
+  \STATE Initialize $\forall e \in V$, $\rho_e = \infty$.
+  \STATE Initialize $S^0 = \emptyset$
+  \STATE Initialize $i = 0$
+  \STATE Push all $(e, \rho_e, 0)$ onto $Q$, $\widehat{Q}$.
+  \FOR{$p = 1, \dots, P$}
+    \WHILE{$i < k$}
+      \STATE $(e, \rho_e, i_e) = getNextElement()$
+      \IF{$dep(e) \cap (S^i \backslash S^{i_e}) \neq \emptyset$}
+        \STATE $\rho_e     \leftarrow F(S^{i_e} \cup e) - F(S^{i_e})$
+      \ENDIF
+      \STATE $commit(e, \rho_e, i_e)$
+    \ENDWHILE
+  \ENDFOR
+\end{algorithmic}
+\end{algorithm}
 
-Alphabetize references by the surnames of the first authors, with
-single author entries preceding multiple author entries. Order
-references for the same authors by year of publication, with the
-earliest first. Make sure that each reference includes all relevant
-information (e.g., page numbers).
+\begin{algorithm}[tb]
+  \caption{Simple $getNextElement()$}
+  \label{alg:scclz:getnext}
+\begin{algorithmic}
+  \STATE $lock(\widehat{Q})$
+  \STATE $(e, \rho_e, i_e) = \widehat{Q}.pop()$
+  \STATE $i_e \leftarrow i$
+  \STATE $unlock(\widehat{Q})$
+  \STATE \textbf{return} $(e, \rho_e, i_e)$
+\end{algorithmic}
+\end{algorithm}
 
-\subsection{Software and Data}
 
-We strongly encourage the publication of software and data with the
-camera-ready version of the paper whenever appropriate.  This can be
-done by including a URL in the camera-ready copy.  However, do not
-include URLs that reveal your institution or identity in your
-submission for review.  Instead, provide an anonymous URL or upload
-the material as ``Supplementary Material'' into the CMT reviewing
-system.  Note that reviewers are not required to look a this material
-when writing their review.
+\begin{algorithm}[tb]
+  \caption{Simple $commit(e, \rho_e, i_e)$}
+  \label{alg:scclz:commit}
+\begin{algorithmic}
+  \STATE $lock(Q)$, $lock(\widehat{Q})$
+  \IF{$dep(e) \cap (S^i \backslash S^{i_e}) = \emptyset$}
+    \STATE $i_e \leftarrow i$
+  \ENDIF
+  \STATE $Q.update(e, \rho_e, i_e)$
+  \STATE $(e', \rho_{e'}, i_{e'}) = Q.head()$
+  \IF {$e' = e$ \AND $i_e = i$}
+    \STATE $Q.pop()$
+    \STATE $S^{i+1} = S^i \cup e$
+    \STATE $i \leftarrow i + 1$
+  \ELSE
+    \STATE $\widehat{Q}.push((e, \rho_e, i_e))$
+  \ENDIF
+  \STATE $unlock(Q)$, $unlock(\widehat{Q})$
+\end{algorithmic}
+\end{algorithm}
 
+
+
+
+\subsection{Concurrency control algorithm}
+\cclz{} takes the ideas of \scclz{} a step further.
+Instead of explicitly checking static dependencies, \cclz{} computes a lower bound $\widehat\rho_e$ on the marginal gain too.
+To make the decision to add an element $e$ to $S$, it suffices to have $\widehat\rho_e \geq \rho_{e'}$ for all other elements $e' \not\in S$.
+This allows us to exploit weak (rather than sparse) and conditional (rather than static) dependencies.
+\footnote{
+Consider the example for set-cover, where $e$ and $e'$ both cover the set $\mathcal{A}$.
+Then $e$ and $e'$ are statically dependent on each other, but if $\mathcal{A}$ is covered by some element in $S$, then $e$ and $e'$ are conditionally independent.
+}
+
+\xinghao{The \cclz{} approach may turn out to be less efficient than \scclz{} because of the need to compute $\widehat\rho_e$.
+We'll need to actually test this with a bunch of functions to know for sure.}
+\begin{algorithm}[tb]
+  \caption{Concurrency Control Lazy Greedy}
+  \label{alg:cclz}
+\begin{algorithmic}[1]
+  \STATE {\bfseries Input:} data $V$, cardinality constraint $k$
+  \STATE Initialize $\forall e \in V$, $\rho_e = \infty$.
+  \STATE Initialize $S = \widehat{S} = \emptyset$
+  \STATE Push all $(e, \rho_e)$ onto $Q$, $\widehat{Q}$.
+  \FOR{$p = 1, \dots, P$}
+    \STATE $e = getNextElement()$
+    \STATE $\rho_e     \leftarrow F(S\cup e) - F(S)$
+    \STATE $\widehat\rho_e \leftarrow F(\widehat{S}\cup e) - F(\widehat{S})$
+    \STATE $commit(e, \rho_e, \widehat\rho_e)$
+  \ENDFOR
+\end{algorithmic}
+\end{algorithm}
+
+
+\begin{algorithm}[tb]
+  \caption{$getNextElement()$}
+  \label{alg:cclz:getnext}
+\begin{algorithmic}
+  \STATE $lock(\widehat{Q})$
+  \STATE $(e, \rho_e) = \widehat{Q}.pop()$
+  \STATE $unlock(\widehat{Q})$
+  \STATE $\widehat{S}(e) = 1$
+  \STATE \textbf{return} $e$
+\end{algorithmic}
+\end{algorithm}
+
+
+\begin{algorithm}[tb]
+  \caption{$commit(e, \rho_e, \widehat\rho_e)$}
+  \label{alg:cclz:commit}
+\begin{algorithmic}
+  \STATE $lock(Q)$, $lock(\widehat{Q})$
+  \STATE $Q.update(e, \rho_e)$
+  \STATE $(e', \rho_{e'}) = Q.head()$
+  \IF {$e' = e$}
+    \STATE $Q.pop()$
+    \STATE $(e', \rho_{e'}) = Q.head()$
+    \STATE $Q.push((e, \rho_e))$
+  \ENDIF
+  \IF {$\widehat\rho_e \geq \rho_{e'}$}
+    \STATE $Q.pop()$
+    \STATE $S(e) = 1$
+  \ELSE
+    \STATE $\widehat{Q}.push((e, \rho_e))$
+    \STATE $\widehat{S}(e) = 0$
+  \ENDIF
+  \STATE $unlock(Q)$, $unlock(\widehat{Q})$
+\end{algorithmic}
+\end{algorithm}
+
+
+
+
+
+\subsection{Analysis}
+All the parallel algorithms, \mrlz{}, \scclz{}, and \cclz{}, are serially equivalent to some lazy greedy algorithm.
+To be more precise, the output of the parallel algorithms are equivalent to serial greedy / lazy greedy, but may compute different upper bounds along the way.
+
+As a corollary, the parallel algorithms have a $1-1/e$ approximation.
+\section{Evaluation}
+\label{sec:evaluation}
+
+\section{Discussions}
+\label{sec:discussions}
 
 % Acknowledgements should only appear in the accepted version. 
-\section*{Acknowledgments} 
+% \section*{Acknowledgments} 
  
-\textbf{Do not} include acknowledgements in the initial version of
-the paper submitted for blind review.
 
-If a paper is accepted, the final camera-ready version can (and
-probably should) include acknowledgements. In this case, please
-place such acknowledgements in an unnumbered section at the
-end of the paper. Typically, this will include thanks to reviewers
-who gave useful comments, to colleagues who contributed to the ideas, 
-and to funding agencies and corporate sponsors that provided financial 
-support.  
-
-
-% In the unusual situation where you want a paper to appear in the
-% references without citing it in the main text, use \nocite
-\nocite{langley00}
 
 \bibliography{references_arxiv}
 \bibliographystyle{icml2014}
