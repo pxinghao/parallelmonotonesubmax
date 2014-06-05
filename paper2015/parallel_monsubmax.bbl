@@ -5,9 +5,11 @@
   \providecommand{\doi}[1]{doi: #1}\else
   \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
 
-\bibitem[Badanidiyuru \& Vondr\'ak(2014)Badanidiyuru and Vondr\'ak]{badan14}
-Badanidiyuru, A. and Vondr\'ak, J.
-\newblock Fast algorithms for maximizing submodular functions.
-\newblock In \emph{SODA}, 2014.
+\bibitem[Mirzasoleiman et~al.(2013)Mirzasoleiman, Karbasi, Sarkar, and
+  Krause]{Mirzasoleiman2013}
+Mirzasoleiman, B., Karbasi, A., Sarkar, R., and Krause, A.
+\newblock Distributed submodular maximization: Identifying representative
+  elements in massive data.
+\newblock In \emph{Advances in Neural Information Processing Systems 26}. 2013.
 
 \end{thebibliography}

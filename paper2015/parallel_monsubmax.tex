@@ -230,12 +230,20 @@ In this paper, we use apply concurrency control to parallelize lazy greedy, and 
 
 \section{Related work}
 \label{sec:relatedwork}
-\cite{badan14} proposed one-shot MapReduce greedy, which provides a weaker approximation guarantee.
+\cite{Mirzasoleiman2013} proposed one-shot MapReduce greedy, which provides a weaker approximation guarantee.
 
 \section{Submodularity}
 \label{sec:submodular}
+\xinghao{Explain submodularity, and why submodular maximization is important.}
 
 \subsection{Lazy greedy algorithm}
+The standard algorithm for monotone submodular maximization is the greedy algorithm, which guarantees a $1 -1/e$ approximation.
+The greedy algorithm sequentially grows the solution set $S$ over $k$ iterations, choosing to add the element $e$ that has the highest marginal gain $f(S \cup e) - f(S)$ to $S$.
+
+Searching for the element with the highest marginal gain could be an expensive operation if the ground set $V$ is large.
+The lazy greedy algorithm \seqlz{} (\algref{alg:seqlz}) tries to avoid computing the marginal gains for all elements at each iteration by maintaining upper bounds $\rho_e$ on the marginal gains.
+This is achieved by exploiting submodularity: as $S$ grows, the marginal gain for any element can only decrease, so marginal gains computed in earlier iterations can serve as upper bounds.
+\seqlz{} then adds to $S$ any element $e$ whose marginal gain exceeds $\rho_{e'}$ of every other element $e'$.
 \begin{algorithm}[tb]
   \caption{Serial Lazy Greedy}
   \label{alg:seqlz}
@@ -270,7 +278,10 @@ In this paper, we use apply concurrency control to parallelize lazy greedy, and 
 \xinghao{Descriptions were written late at night, so apologies for the rambling and poor description.}
 The MapReduce lazy greedy algorithm, \mrlz{}, is the most straightforward parallelization of \seqlz{}.
 The high-level idea is that we can tighten the upper bounds $\rho_e$ on marginal gains without compromising correctness.
-\mrlz{} computes more $\rho_e$'s than \seqlz{}, but distributes this expensive work over multiple processors.
+
+Each Map operation of \mrlz{} proactively computes $P$ marginal gains $\rho_e$'s, based on the current value of $S$.
+If any such $\rho_e$ exceeds the upper bounds of every other element, \mrlz{} adds that element to $S$.
+As such \mrlz{} computes more $\rho_e$'s than \seqlz{}, but distributes this expensive work over multiple processors.
 \begin{algorithm}[tb]
   \caption{MapReduce Lazy Greedy}
   \label{alg:mrlz}
@@ -303,6 +314,7 @@ The high-level idea is that we can tighten the upper bounds $\rho_e$ on marginal
 \subsection{Simple concurrency control algorithm}
 \mrlz{} imposes expensive coordination barriers.
 \scclz{} attempts to address this problem by asynchronous concurrency control.
+
 In addition, \scclz{} tries to conserve computation for submodular functions with sparse dependencies.
 In such cases, the marginal gains for some elements may not be affected by the inclusion of new elements into $S$.
 \scclz{} identifies opportunities for re-using the computations of $\rho_e$'s.
@@ -318,22 +330,22 @@ In such cases, the marginal gains for some elements may not be affected by the i
   \FOR{$p = 1, \dots, P$}
     \WHILE{$i < k$}
       \STATE $(e, \rho_e, i_e) = getNextElement()$
-      \IF{$dep(e) \cap (S^i \backslash S^{i_e}) \neq \emptyset$}
-        \STATE $\rho_e     \leftarrow F(S^{i_e} \cup e) - F(S^{i_e})$
+      \STATE $j = i$
+      \IF{$dep(e) \cap (S^j \backslash S^{i_e}) \neq \emptyset$}
+        \STATE $\rho_e     \leftarrow F(S^j \cup e) - F(S^j)$
       \ENDIF
-      \STATE $commit(e, \rho_e, i_e)$
+      \STATE $commit(e, \rho_e, j)$
     \ENDWHILE
   \ENDFOR
 \end{algorithmic}
 \end{algorithm}
 
 \begin{algorithm}[tb]
-  \caption{Simple $getNextElement()$}
+  \caption{$getNextElement()$}
   \label{alg:scclz:getnext}
 \begin{algorithmic}
   \STATE $lock(\widehat{Q})$
   \STATE $(e, \rho_e, i_e) = \widehat{Q}.pop()$
-  \STATE $i_e \leftarrow i$
   \STATE $unlock(\widehat{Q})$
   \STATE \textbf{return} $(e, \rho_e, i_e)$
 \end{algorithmic}
@@ -364,6 +376,7 @@ In such cases, the marginal gains for some elements may not be affected by the i
 
 
 
+
 \subsection{Concurrency control algorithm}
 \cclz{} takes the ideas of \scclz{} a step further.
 Instead of explicitly checking static dependencies, \cclz{} computes a lower bound $\widehat\rho_e$ on the marginal gain too.
@@ -375,7 +388,15 @@ Then $e$ and $e'$ are statically dependent on each other, but if $\mathcal{A}$ i
 }
 
 \xinghao{The \cclz{} approach may turn out to be less efficient than \scclz{} because of the need to compute $\widehat\rho_e$.
+On the other hand, if the functions only admit `conditional' but not `static' dependencies, then \cclz{} might make more sense than \scclz{}.
 We'll need to actually test this with a bunch of functions to know for sure.}
+
+\xinghao{\cclz{} is also more in line with the pattern of our non-monotone paper.
+The general pattern is: getNextElement, getBounds, attempt-to-make-progress, commit.
+Here, we define ``progress'' as either computing tight bounds $\rho_e = \widehat\rho_e$, or advancing $i_e$.}
+
+~
+
 \begin{algorithm}[tb]
   \caption{Concurrency Control Lazy Greedy}
   \label{alg:cclz}
@@ -383,35 +404,47 @@ We'll need to actually test this with a bunch of functions to know for sure.}
   \STATE {\bfseries Input:} data $V$, cardinality constraint $k$
   \STATE Initialize $\forall e \in V$, $\rho_e = \infty$.
   \STATE Initialize $S = \widehat{S} = \emptyset$
-  \STATE Push all $(e, \rho_e)$ onto $Q$, $\widehat{Q}$.
+  \STATE Initialize $i = 0$, $t = 0$
+  \STATE Push all $(e, \rho_e, 0)$ onto $Q$, $\widehat{Q}$.
   \FOR{$p = 1, \dots, P$}
-    \STATE $e = getNextElement()$
-    \STATE $\rho_e     \leftarrow F(S\cup e) - F(S)$
-    \STATE $\widehat\rho_e \leftarrow F(\widehat{S}\cup e) - F(\widehat{S})$
-    \STATE $commit(e, \rho_e, \widehat\rho_e)$
+    \STATE $(e, \rho_e, i_e) = getNextElement()$
+    \STATE $(S_e, \widehat{S}_e, t_e) = getBounds(e)$
+    \IF{$i_e = i$}
+      \STATE $\rho_e \leftarrow FAIL$, $\widehat\rho_e \leftarrow FAIL$
+    \ELSE
+      \STATE $\rho_e     \leftarrow F(S_e\cup e) - F(S_e)$
+      \STATE $\widehat\rho_e \leftarrow F(\widehat{S}_e\cup e) - F(\widehat{S}_e)$
+    \ENDIF
+    \STATE $commit(e, \rho_e, \widehat\rho_e, t_e)$
   \ENDFOR
 \end{algorithmic}
 \end{algorithm}
 
 
+
 \begin{algorithm}[tb]
-  \caption{$getNextElement()$}
-  \label{alg:cclz:getnext}
+  \caption{$getBounds(e)$}
+  \label{alg:cclz:getbound}
 \begin{algorithmic}
-  \STATE $lock(\widehat{Q})$
-  \STATE $(e, \rho_e) = \widehat{Q}.pop()$
-  \STATE $unlock(\widehat{Q})$
   \STATE $\widehat{S}(e) = 1$
-  \STATE \textbf{return} $e$
+  \STATE $t = t + 1$
+  \STATE $S_e = S$, $\widehat{S}_e = \widehat{S}$
+  \STATE $t_e = t$
+  \STATE \textbf{return} $(S_e, \widehat{S}_e, t_e)$
 \end{algorithmic}
 \end{algorithm}
 
 
 \begin{algorithm}[tb]
-  \caption{$commit(e, \rho_e, \widehat\rho_e)$}
+  \caption{$commit(e, \rho_e, \widehat\rho_e, t_e)$}
   \label{alg:cclz:commit}
 \begin{algorithmic}
+  \STATE \textbf{wait until} $\forall t < t_e, flag(t) = true$
   \STATE $lock(Q)$, $lock(\widehat{Q})$
+  \IF{$\rho_e = FAIL$}
+    \STATE $\rho_e         \leftarrow F(S\cup e) - F(S)$
+    \STATE $\widehat\rho_e \leftarrow \rho_e$
+  \ENDIF
   \STATE $Q.update(e, \rho_e)$
   \STATE $(e', \rho_{e'}) = Q.head()$
   \IF {$e' = e$}
@@ -426,6 +459,7 @@ We'll need to actually test this with a bunch of functions to know for sure.}
     \STATE $\widehat{Q}.push((e, \rho_e))$
     \STATE $\widehat{S}(e) = 0$
   \ENDIF
+  \STATE $flag(t_e) \leftarrow true$
   \STATE $unlock(Q)$, $unlock(\widehat{Q})$
 \end{algorithmic}
 \end{algorithm}
