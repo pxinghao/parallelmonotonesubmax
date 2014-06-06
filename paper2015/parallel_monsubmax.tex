@@ -230,7 +230,12 @@ In this paper, we use apply concurrency control to parallelize lazy greedy, and 
 
 \section{Related work}
 \label{sec:relatedwork}
-\cite{Mirzasoleiman2013} proposed one-shot MapReduce greedy, which provides a weaker approximation guarantee.
+\citet{wei14} proposed a multi-stage greedy algorithm that is \xinghao{possibly} complementary to our parallel approaches.
+
+\citet{Mirzasoleiman2013} proposed a one-pass map-reduce greedy algorithm.
+However, this algorithm requires one to potentially choose more than $k$ elements, and in general provides a poor approximation guarantee.
+
+\citet{kumar13} proposed sampling based map-reduce algorithms for monotone submodular maximization, with weaker approximation guarantees.
 
 \section{Submodularity}
 \label{sec:submodular}

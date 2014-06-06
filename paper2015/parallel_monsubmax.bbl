@@ -1,9 +1,14 @@
-\begin{thebibliography}{1}
+\begin{thebibliography}{3}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \expandafter\ifx\csname urlstyle\endcsname\relax
   \providecommand{\doi}[1]{doi: #1}\else
   \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
+
+\bibitem[Kumar et~al.(2013)Kumar, Moseley, Vassilvitskii, and Vattani]{kumar13}
+Kumar, R., Moseley, B., Vassilvitskii, S., and Vattani, A.
+\newblock Fast greedy algorithms in {M}ap{R}educe and streaming.
+\newblock In \emph{SPAA}, 2013.
 
 \bibitem[Mirzasoleiman et~al.(2013)Mirzasoleiman, Karbasi, Sarkar, and
   Krause]{Mirzasoleiman2013}
@@ -11,5 +16,10 @@ Mirzasoleiman, B., Karbasi, A., Sarkar, R., and Krause, A.
 \newblock Distributed submodular maximization: Identifying representative
   elements in massive data.
 \newblock In \emph{Advances in Neural Information Processing Systems 26}. 2013.
+
+\bibitem[Wei et~al.(2014)Wei, Iyer, and Bilmes]{wei14}
+Wei, K., Iyer, R., and Bilmes, J.
+\newblock Fast multi-stage submodular maximization.
+\newblock In \emph{ICML}, 2014.
 
 \end{thebibliography}
