@@ -177,8 +177,8 @@
 
 \newcommand{\seqlz}{Seq-lg}
 \newcommand{\mrlz}{MR-lg}
-\newcommand{\scclz}{SCC-lg}
-\newcommand{\cclz}{CC-lg}
+\newcommand{\occlz}{SCC-lg}
+\newcommand{\pcclz}{CC-lg}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -316,15 +316,15 @@ As such \mrlz{} computes more $\rho_e$'s than \seqlz{}, but distributes this exp
 
 
 
-\subsection{Simple concurrency control algorithm}
+\subsection{Optimistic concurrency control algorithm}
 \mrlz{} imposes expensive coordination barriers.
-\scclz{} attempts to address this problem by asynchronous concurrency control.
+\occlz{} attempts to address this problem by asynchronous concurrency control.
 
-In addition, \scclz{} tries to conserve computation for submodular functions with sparse dependencies.
+In addition, \occlz{} tries to conserve computation for submodular functions with sparse dependencies.
 In such cases, the marginal gains for some elements may not be affected by the inclusion of new elements into $S$.
-\scclz{} identifies opportunities for re-using the computations of $\rho_e$'s.
+\occlz{} identifies opportunities for re-using the computations of $\rho_e$'s.
 \begin{algorithm}[tb]
-  \caption{Simple CC Lazy Greedy}
+  \caption{Optimistic CC Lazy Greedy}
   \label{alg:scclz}
 \begin{algorithmic}[1]
   \STATE {\bfseries Input:} data $V$, cardinality constraint $k$
@@ -358,7 +358,7 @@ In such cases, the marginal gains for some elements may not be affected by the i
 
 
 \begin{algorithm}[tb]
-  \caption{Simple $commit(e, \rho_e, i_e)$}
+  \caption{OCC $commit(e, \rho_e, i_e)$}
   \label{alg:scclz:commit}
 \begin{algorithmic}
   \STATE $lock(Q)$, $lock(\widehat{Q})$
@@ -382,9 +382,9 @@ In such cases, the marginal gains for some elements may not be affected by the i
 
 
 
-\subsection{Concurrency control algorithm}
-\cclz{} takes the ideas of \scclz{} a step further.
-Instead of explicitly checking static dependencies, \cclz{} computes a lower bound $\widehat\rho_e$ on the marginal gain too.
+\subsection{Pessimistic concurrency control algorithm}
+\pcclz{} takes the ideas of \occlz{} a step further.
+Instead of explicitly checking static dependencies, \pcclz{} computes a lower bound $\widehat\rho_e$ on the marginal gain too.
 To make the decision to add an element $e$ to $S$, it suffices to have $\widehat\rho_e \geq \rho_{e'}$ for all other elements $e' \not\in S$.
 This allows us to exploit weak (rather than sparse) and conditional (rather than static) dependencies.
 \footnote{
@@ -392,18 +392,18 @@ Consider the example for set-cover, where $e$ and $e'$ both cover the set $\math
 Then $e$ and $e'$ are statically dependent on each other, but if $\mathcal{A}$ is covered by some element in $S$, then $e$ and $e'$ are conditionally independent.
 }
 
-\xinghao{The \cclz{} approach may turn out to be less efficient than \scclz{} because of the need to compute $\widehat\rho_e$.
-On the other hand, if the functions only admit `conditional' but not `static' dependencies, then \cclz{} might make more sense than \scclz{}.
+\xinghao{The \pcclz{} approach may turn out to be less efficient than \occlz{} because of the need to compute $\widehat\rho_e$.
+On the other hand, if the functions only admit `conditional' but not `static' dependencies, then \pcclz{} might make more sense than \occlz{}.
 We'll need to actually test this with a bunch of functions to know for sure.}
 
-\xinghao{\cclz{} is also more in line with the pattern of our non-monotone paper.
+\xinghao{\pcclz{} is also more in line with the pattern of our non-monotone paper.
 The general pattern is: getNextElement, getBounds, attempt-to-make-progress, commit.
 Here, we define ``progress'' as either computing tight bounds $\rho_e = \widehat\rho_e$, or advancing $i_e$.}
 
 ~
 
 \begin{algorithm}[tb]
-  \caption{Concurrency Control Lazy Greedy}
+  \caption{Pessimistic CC Lazy Greedy}
   \label{alg:cclz}
 \begin{algorithmic}[1]
   \STATE {\bfseries Input:} data $V$, cardinality constraint $k$
@@ -474,7 +474,7 @@ Here, we define ``progress'' as either computing tight bounds $\rho_e = \widehat
 
 
 \subsection{Analysis}
-All the parallel algorithms, \mrlz{}, \scclz{}, and \cclz{}, are serially equivalent to some lazy greedy algorithm.
+All the parallel algorithms, \mrlz{}, \occlz{}, and \pcclz{}, are serially equivalent to some lazy greedy algorithm.
 To be more precise, the output of the parallel algorithms are equivalent to serial greedy / lazy greedy, but may compute different upper bounds along the way.
 
 As a corollary, the parallel algorithms have a $1-1/e$ approximation.
