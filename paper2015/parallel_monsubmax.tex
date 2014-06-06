@@ -177,8 +177,8 @@
 
 \newcommand{\seqlz}{Seq-lg}
 \newcommand{\mrlz}{MR-lg}
-\newcommand{\occlz}{SCC-lg}
-\newcommand{\pcclz}{CC-lg}
+\newcommand{\occlz}{Occ-lg}
+\newcommand{\pcclz}{Pcc-lg}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -236,6 +236,8 @@ In this paper, we use apply concurrency control to parallelize lazy greedy, and 
 However, this algorithm requires one to potentially choose more than $k$ elements, and in general provides a poor approximation guarantee.
 
 \citet{kumar13} proposed sampling based map-reduce algorithms for monotone submodular maximization, with weaker approximation guarantees.
+
+Concurrency control has been applied to other problems by \cite{pan2013} \xinghao{and hopefully our NIPS 2014 paper}.
 
 \section{Submodularity}
 \label{sec:submodular}
@@ -321,8 +323,8 @@ As such \mrlz{} computes more $\rho_e$'s than \seqlz{}, but distributes this exp
 \occlz{} attempts to address this problem by asynchronous concurrency control.
 
 In addition, \occlz{} tries to conserve computation for submodular functions with sparse dependencies.
-In such cases, the marginal gains for some elements may not be affected by the inclusion of new elements into $S$.
-\occlz{} identifies opportunities for re-using the computations of $\rho_e$'s.
+In such cases, the marginal gains for some elements may not be affected by the inclusion of new elements into $S$, and thus may be used for later iterations.
+In cases where the marginal gains are not valid due to inclusion of other elements, we can still re-use the marginal gains as upper bounds.
 \begin{algorithm}[tb]
   \caption{Optimistic CC Lazy Greedy}
   \label{alg:scclz}
@@ -336,10 +338,9 @@ In such cases, the marginal gains for some elements may not be affected by the i
     \WHILE{$i < k$}
       \STATE $(e, \rho_e, i_e) = getNextElement()$
       \STATE $j = i$
-      \IF{$dep(e) \cap (S^j \backslash S^{i_e}) \neq \emptyset$}
-        \STATE $\rho_e     \leftarrow F(S^j \cup e) - F(S^j)$
-      \ENDIF
-      \STATE $commit(e, \rho_e, j)$
+      \STATE $\rho_e     \leftarrow F(S^j \cup e) - F(S^j)$
+      \STATE $dep_e \leftarrow constructDependencies(e, S^j)$
+      \STATE $commit(e, \rho_e, dep_e, j)$
     \ENDWHILE
   \ENDFOR
 \end{algorithmic}
@@ -358,11 +359,11 @@ In such cases, the marginal gains for some elements may not be affected by the i
 
 
 \begin{algorithm}[tb]
-  \caption{OCC $commit(e, \rho_e, i_e)$}
+  \caption{OCC $commit(e, \rho_e, dep_e, i_e)$}
   \label{alg:scclz:commit}
 \begin{algorithmic}
   \STATE $lock(Q)$, $lock(\widehat{Q})$
-  \IF{$dep(e) \cap (S^i \backslash S^{i_e}) = \emptyset$}
+  \IF{$dep_e \cap (S^i \backslash S^{i_e}) = \emptyset$}
     \STATE $i_e \leftarrow i$
   \ENDIF
   \STATE $Q.update(e, \rho_e, i_e)$
@@ -384,16 +385,10 @@ In such cases, the marginal gains for some elements may not be affected by the i
 
 \subsection{Pessimistic concurrency control algorithm}
 \pcclz{} takes the ideas of \occlz{} a step further.
-Instead of explicitly checking static dependencies, \pcclz{} computes a lower bound $\widehat\rho_e$ on the marginal gain too.
+Instead of explicitly constructing dependencies, \pcclz{} computes a lower bound $\widehat\rho_e$ on the marginal gain in addition to the upper bound $\rho_e$.
 To make the decision to add an element $e$ to $S$, it suffices to have $\widehat\rho_e \geq \rho_{e'}$ for all other elements $e' \not\in S$.
-This allows us to exploit weak (rather than sparse) and conditional (rather than static) dependencies.
-\footnote{
-Consider the example for set-cover, where $e$ and $e'$ both cover the set $\mathcal{A}$.
-Then $e$ and $e'$ are statically dependent on each other, but if $\mathcal{A}$ is covered by some element in $S$, then $e$ and $e'$ are conditionally independent.
-}
 
 \xinghao{The \pcclz{} approach may turn out to be less efficient than \occlz{} because of the need to compute $\widehat\rho_e$.
-On the other hand, if the functions only admit `conditional' but not `static' dependencies, then \pcclz{} might make more sense than \occlz{}.
 We'll need to actually test this with a bunch of functions to know for sure.}
 
 \xinghao{\pcclz{} is also more in line with the pattern of our non-monotone paper.
