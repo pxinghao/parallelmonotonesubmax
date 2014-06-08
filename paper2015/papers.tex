@@ -1,0 +1,119 @@
+\documentclass{article}
+
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{natbib}
+
+\begin{document}
+
+\section{Distributed / parallel algorithms}
+
+\subsection{Monotone}
+
+\begin{description}
+\item[\citet{Mirzasoleiman2013}***] Divide-and-conquer, bounds are only good with other assumptions (locality, sampling for representation)
+\item[\citet{kumar13}***] MapReduce in several rounds. Trick is an $\epsilon$-greedy subroutine, and greedy wrt a current set (? check that)
+\item[\citet{wei14}***] key idea is a modular (conditional) approximation of the submodular function. 
+\end{description}
+
+\subsection{Set cover as a special case}
+
+\begin{description}
+\item[todo] There was a CMU paper a while ago (by some parallel people?)
+\end{description}
+
+\subsection{Non-monotone}
+
+
+
+\section{Streaming/online algorithms}
+
+See also Section 4.4 in Andreas Krause's survey for an overview.
+
+\subsection{Monotone}
+
+\begin{description}
+\item[\citet{kapralov13}**] prove that no online algorithm (even randomized, against an oblivious adversary) is better than $1/2$-competitive for welfare maximization with coverage valuations. Also prove that Greedy in a stochastic setting with i.i.d. items and valuations satisfying diminishing returns is $(1-1/e)$-competitive.
+\item[\citet{buchbinder12}] not sure how relevant
+\item[\citet{feldman11sec}***] 
+\end{description}
+
+
+\subsection{Non-monotone}
+
+\begin{description}
+\item[\cite{bateni10}***] (non-monotone) submodular secretary problem, with matroid constraints; $O(l \log^2 r)$ ($l$ matroids, each of rank $r$ or less); also knapsack constraints and subadditive utility functions.
+\item[\citet{gupta10}***] 
+\end{description}
+
+\subsection{Linear opt over matroid}
+\begin{description}
+\item[\citet{babaioff}]
+\item[\citet{ogharan11}]
+\item[\citet{imXX}] 
+\end{description}
+
+\subsection{Other maybe related}
+\begin{description}
+\item[\citet{feldman12parallel}] 
+\end{description}
+
+
+\subsection{Online learning}
+
+That means multiple repetitions of a ``game'' to ``learn'' a good solution.
+
+\begin{description}
+\item[\citet{ross13}] Bandit greedy with no regret. (essentially learning a list). Intuitively, I think this is related to the idea of viewing greedy as optimizing a linear (subgradient-based) approximation \citep{iyer13icml}
+\item[\citet{streeter09}] 
+\end{description}
+
+
+\section{Other algorithms}
+
+\begin{description}
+\item[\citet{badan14}] The basis of \cite{wei14}. 
+\end{description}
+
+\section{Exploiting additional properties}
+
+\subsubsection{Curvature}
+\begin{description}
+\item[\citet{sviridenko13}]
+\item[\citet{wei14}] (I think, to be checked)
+\item[\citet{iyer13curv}] (not max; but min and learning)
+\item[\citet{conforti84}] improved bounds for the greedy algorithm
+\item[\citet{vondrak10}] 
+\end{description}
+
+\subsubsection{Approximate function (specialized)}
+\begin{description}
+\item[\citet{borgs14}] 
+\end{description}
+
+\subsubsection{Locality, repetition}
+\begin{description}
+\item[\citet{Mirzasoleiman2013}] 
+\end{description}
+
+
+\section{Examples of large scale applications or of speeding up functions}
+
+\begin{description}
+\item[\citet{borgs14}] Expressing diffusion functions on networks via hypergraph (covers). Factor of $O(1 - 1/e - \epsilon)$ in time $O((m+n)\epsilon^{-3} \log n)$. Also some bounds for ``early stopping''.
+\end{description}
+
+
+
+
+\section{Other ideas}
+
+\begin{itemize}
+\item Graph sparsification, OCC-ifying \citet{kelner11}
+\end{itemize}
+
+
+\bibliographystyle{abbrvnat}
+\bibliography{references_arxiv}
+
+\end{document}
