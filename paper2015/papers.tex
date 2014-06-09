@@ -4,6 +4,15 @@
 \usepackage{amssymb}
 \usepackage{natbib}
 
+\usepackage{color}
+
+% Commenting system
+\newcommand{\Comments}{1}
+\newcommand{\note}[2]{\ifnum\Comments=1\textcolor{#1}{#2}\fi}
+\newcommand{\xinghao}[1]{\note{red}{[XP: #1]}}
+\newcommand{\joey}[1]{\note{blue}{[JG: #1]}}
+\newcommand{\stef}[1]{\note{green}{[SJ: #1]}}
+
 \begin{document}
 
 \section{Distributed / parallel algorithms}
@@ -13,7 +22,7 @@
 \begin{description}
 \item[\citet{Mirzasoleiman2013}***] Divide-and-conquer, bounds are only good with other assumptions (locality, sampling for representation)
 \item[\citet{kumar13}***] MapReduce in several rounds. Trick is an $\epsilon$-greedy subroutine, and greedy wrt a current set (? check that)
-\item[\citet{wei14}***] key idea is a modular (conditional) approximation of the submodular function. 
+\item[\citet{wei14}***] key idea is a modular (conditional) approximation of the submodular function. \xinghao{From my cursory reading, I think this is an approximation algorithm that builds on lazy greedy, and is complementary to distributive algorithms. It is not, by itself, a distributed algorithm.}
 \end{description}
 
 \subsection{Set cover as a special case}
