@@ -385,15 +385,15 @@ In cases where the marginal gains are not valid due to inclusion of other elemen
 
 \subsection{Pessimistic concurrency control algorithm}
 \pcclz{} takes the ideas of \occlz{} a step further.
-Instead of explicitly constructing dependencies, \pcclz{} computes a lower bound $\widehat\rho_e$ on the marginal gain in addition to the upper bound $\rho_e$.
-To make the decision to add an element $e$ to $S$, it suffices to have $\widehat\rho_e \geq \rho_{e'}$ for all other elements $e' \not\in S$.
+Instead of explicitly constructing dependencies, \pcclz{} computes a lower bound $\widetilde\rho_e$ on the marginal gain in addition to the upper bound $\rho_e$.
+To make the decision to add an element $e$ to $S$, it suffices to have $\widetilde\rho_e \geq \rho_{e'}$ for all other elements $e' \not\in S$.
 
-\xinghao{The \pcclz{} approach may turn out to be less efficient than \occlz{} because of the need to compute $\widehat\rho_e$.
+\xinghao{The \pcclz{} approach may turn out to be less efficient than \occlz{} because of the need to compute $\widetilde\rho_e$.
 We'll need to actually test this with a bunch of functions to know for sure.}
 
 \xinghao{\pcclz{} is also more in line with the pattern of our non-monotone paper.
 The general pattern is: getNextElement, getBounds, attempt-to-make-progress, commit.
-Here, we define ``progress'' as either computing tight bounds $\rho_e = \widehat\rho_e$, or advancing $i_e$.}
+Here, we define ``progress'' as either computing tight bounds $\rho_e = \widetilde\rho_e$, or advancing $i_e$.}
 
 ~
 
@@ -410,12 +410,12 @@ Here, we define ``progress'' as either computing tight bounds $\rho_e = \widehat
     \STATE $(e, \rho_e, i_e) = getNextElement()$
     \STATE $(S_e, \widehat{S}_e, t_e) = getBounds(e)$
     \IF{$i_e = i$}
-      \STATE $\rho_e \leftarrow FAIL$, $\widehat\rho_e \leftarrow FAIL$
+      \STATE $\rho_e \leftarrow FAIL$, $\widetilde\rho_e \leftarrow FAIL$
     \ELSE
       \STATE $\rho_e     \leftarrow F(S_e\cup e) - F(S_e)$
-      \STATE $\widehat\rho_e \leftarrow F(\widehat{S}_e\cup e) - F(\widehat{S}_e)$
+      \STATE $\widetilde\rho_e \leftarrow F(\widehat{S}_e\cup e) - F(\widehat{S}_e)$
     \ENDIF
-    \STATE $commit(e, \rho_e, \widehat\rho_e, t_e, i_e)$
+    \STATE $commit(e, \rho_e, \widetilde\rho_e, t_e, i_e)$
   \ENDFOR
 \end{algorithmic}
 \end{algorithm}
@@ -436,14 +436,14 @@ Here, we define ``progress'' as either computing tight bounds $\rho_e = \widehat
 
 
 \begin{algorithm}[tb]
-  \caption{$commit(e, \rho_e, \widehat\rho_e, t_e, i_e)$}
+  \caption{$commit(e, \rho_e, \widetilde\rho_e, t_e, i_e)$}
   \label{alg:cclz:commit}
 \begin{algorithmic}
   \STATE \textbf{wait until} $\forall t < t_e, flag(t) = true$
   \COMMENT{\xinghao{timestamp based protocol}}
   \IF{$\rho_e = FAIL$}
     \STATE $\rho_e         \leftarrow F(S\cup e) - F(S)$
-    \STATE $\widehat\rho_e \leftarrow \rho_e$
+    \STATE $\widetilde\rho_e \leftarrow \rho_e$
   \ENDIF
   \STATE $lock(Q)$
   \COMMENT{\xinghao{Unnecessary -- $Q$ accessed only here}}
@@ -455,7 +455,7 @@ Here, we define ``progress'' as either computing tight bounds $\rho_e = \widehat
     \STATE $Q.push((e, \rho_e, i_e))$
   \ENDIF
   \STATE $lock(\widehat{Q})$
-  \IF {$\widehat\rho_e \geq \rho_{e'}$}
+  \IF {$\widetilde\rho_e \geq \rho_{e'}$}
     \STATE $Q.pop()$
     \STATE $S(e) = 1$
     \STATE $i \leftarrow i+1$
