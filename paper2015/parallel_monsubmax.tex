@@ -415,7 +415,7 @@ Here, we define ``progress'' as either computing tight bounds $\rho_e = \widehat
       \STATE $\rho_e     \leftarrow F(S_e\cup e) - F(S_e)$
       \STATE $\widehat\rho_e \leftarrow F(\widehat{S}_e\cup e) - F(\widehat{S}_e)$
     \ENDIF
-    \STATE $commit(e, \rho_e, \widehat\rho_e, t_e)$
+    \STATE $commit(e, \rho_e, \widehat\rho_e, t_e, i_e)$
   \ENDFOR
 \end{algorithmic}
 \end{algorithm}
@@ -436,31 +436,37 @@ Here, we define ``progress'' as either computing tight bounds $\rho_e = \widehat
 
 
 \begin{algorithm}[tb]
-  \caption{$commit(e, \rho_e, \widehat\rho_e, t_e)$}
+  \caption{$commit(e, \rho_e, \widehat\rho_e, t_e, i_e)$}
   \label{alg:cclz:commit}
 \begin{algorithmic}
   \STATE \textbf{wait until} $\forall t < t_e, flag(t) = true$
-  \STATE $lock(Q)$, $lock(\widehat{Q})$
+  \COMMENT{\xinghao{timestamp based protocol}}
   \IF{$\rho_e = FAIL$}
     \STATE $\rho_e         \leftarrow F(S\cup e) - F(S)$
     \STATE $\widehat\rho_e \leftarrow \rho_e$
   \ENDIF
-  \STATE $Q.update(e, \rho_e)$
+  \STATE $lock(Q)$
+  \COMMENT{\xinghao{Unnecessary -- $Q$ accessed only here}}
+  \STATE $Q.update(e, \rho_e, i_e)$
   \STATE $(e', \rho_{e'}) = Q.head()$
   \IF {$e' = e$}
     \STATE $Q.pop()$
     \STATE $(e', \rho_{e'}) = Q.head()$
-    \STATE $Q.push((e, \rho_e))$
+    \STATE $Q.push((e, \rho_e, i_e))$
   \ENDIF
+  \STATE $lock(\widehat{Q})$
   \IF {$\widehat\rho_e \geq \rho_{e'}$}
     \STATE $Q.pop()$
     \STATE $S(e) = 1$
+    \STATE $i \leftarrow i+1$
   \ELSE
-    \STATE $\widehat{Q}.push((e, \rho_e))$
+    \STATE $\widehat{Q}.push((e, \rho_e, i_e))$
     \STATE $\widehat{S}(e) = 0$
   \ENDIF
   \STATE $flag(t_e) \leftarrow true$
   \STATE $unlock(Q)$, $unlock(\widehat{Q})$
+  \STATE
+  \COMMENT{\xinghao{SS2PL, release all locks simultaneously}}
 \end{algorithmic}
 \end{algorithm}
 
